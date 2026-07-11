@@ -4,8 +4,7 @@ A beautiful movie-browsing app built with Flutter on the TMDB API. Dark-first Ma
 design, hero poster transitions between every screen, and details pages that re-theme
 themselves from each movie's poster colors.
 
-🎬 **[Watch the demo](docs/demo.mp4)** — carousel, hero flights, per-movie dynamic
-theming, search, and favorites in 2½ minutes.
+![CineFlow demo — carousel, hero flights, per-movie dynamic theming, search, and favorites](docs/demo.gif)
 
 ## Features
 
