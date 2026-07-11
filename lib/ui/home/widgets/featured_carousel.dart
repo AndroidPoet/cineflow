@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../config/tmdb_config.dart';
 import '../../../domain/models/movie.dart';
+import '../../../routing/nav.dart';
 import '../../core/widgets/tmdb_image.dart';
-import '../../details/details_args.dart';
 import '../home_providers.dart';
 
 class FeaturedCarousel extends ConsumerStatefulWidget {
@@ -100,9 +99,8 @@ class _FeaturedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return GestureDetector(
-      onTap: () => context.push(
-        '/movie/${movie.id}',
-        extra: DetailsArgs(movie: movie, backdropHeroTag: _heroTag),
+      onTap: () => navStack.push(
+        MovieDetailsKey(movie.id, movie: movie, backdropHeroTag: _heroTag),
       ),
       child: Stack(
         fit: StackFit.expand,

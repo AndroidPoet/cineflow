@@ -1,6 +1,7 @@
+import 'package:back_stack/back_stack.dart';
 import 'package:flutter/material.dart';
 
-import 'routing/router.dart';
+import 'routing/nav.dart';
 import 'ui/core/themes/app_theme.dart';
 
 class CineFlowApp extends StatelessWidget {
@@ -8,12 +9,14 @@ class CineFlowApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return BackStackApp<AppKey>(
       title: 'CineFlow',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.dark,
-      routerConfig: router,
+      stack: navStack,
+      entries: navEntries,
+      links: navLinks,
     );
   }
 }

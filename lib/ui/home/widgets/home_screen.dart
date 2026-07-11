@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
+import '../../../routing/nav.dart';
 import '../home_providers.dart';
 import 'featured_carousel.dart';
 import 'movie_rail.dart';
@@ -39,15 +39,15 @@ class HomeScreen extends ConsumerWidget {
                       ),
                       const Spacer(),
                       IconButton(
-                        onPressed: () => context.push('/search'),
+                        onPressed: () => navStack.push(const SearchKey()),
                         icon: const Icon(Icons.search),
                       ),
                       IconButton(
-                        onPressed: () => context.push('/favorites'),
+                        onPressed: () => navStack.push(const FavoritesKey()),
                         icon: const Icon(Icons.favorite_outline),
                       ),
                       IconButton(
-                        onPressed: () => context.push('/about'),
+                        onPressed: () => navStack.push(const AboutKey()),
                         icon: const Icon(Icons.info_outline),
                       ),
                     ],

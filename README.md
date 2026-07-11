@@ -25,7 +25,7 @@ themselves from each movie's poster colors.
 | | |
 |---|---|
 | State management | Riverpod 3 (`flutter_riverpod`, no codegen) |
-| Navigation | `go_router` |
+| Navigation | [`back_stack`](https://pub.dev/packages/back_stack) — typed list-based back stack |
 | Images | `cached_network_image_ce` |
 | Loading UI | `skeletonizer` |
 | Motion | `Hero` + `flutter_animate` |

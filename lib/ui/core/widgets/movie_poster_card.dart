@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../config/tmdb_config.dart';
 import '../../../domain/models/movie.dart';
-import '../../details/details_args.dart';
+import '../../../routing/nav.dart';
 import 'tmdb_image.dart';
 
 class MoviePosterCard extends StatelessWidget {
@@ -34,9 +33,12 @@ class MoviePosterCard extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(16),
-                  onTap: () => context.push(
-                    '/movie/${movie.id}',
-                    extra: DetailsArgs(movie: movie, posterHeroTag: _heroTag),
+                  onTap: () => navStack.push(
+                    MovieDetailsKey(
+                      movie.id,
+                      movie: movie,
+                      posterHeroTag: _heroTag,
+                    ),
                   ),
                   child: TmdbImage(
                     url: TmdbConfig.posterUrl(movie.posterPath),

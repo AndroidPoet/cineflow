@@ -161,14 +161,19 @@ All from <https://docs.flutter.dev/perf/best-practices>:
 
 ## 6. Navigation (NAV)
 
-- **NAV-1 — `go_router` for all navigation** — the official recommendation ("preferred way to
-  write 90% of Flutter applications" — <https://docs.flutter.dev/app-architecture/recommendations>),
-  maintained by the Flutter team (<https://pub.dev/packages/go_router>).
-- **NAV-2 — Routes are the app's URL scheme.** Every screen has a path (`/movie/:id`); screens
-  take IDs, not whole objects, so deep links always work.
-- **NAV-3 — Hero-crossing routes live on the root navigator.** Heroes do not fly into/out of a
-  `ShellRoute`'s nested navigator (<https://github.com/flutter/flutter/issues/112095>). The movie
-  detail route stays top-level even after a bottom-nav shell is added.
+- **NAV-1 — `back_stack` for all navigation** (<https://pub.dev/packages/back_stack>). This is a
+  deliberate dogfooding choice: CineFlow doubles as the flagship demo for our own library. The
+  official default remains `go_router` ("preferred way to write 90% of Flutter applications" —
+  <https://docs.flutter.dev/app-architecture/recommendations>); anyone forking this app for a
+  neutral reference should know that trade-off. Navigation is a typed list: destinations are
+  `NavKey` subclasses in `lib/routing/nav.dart`, mutated via `navStack.push/pop`.
+- **NAV-2 — Every destination has a URL in the links table.** The `NavLinks` table in
+  `lib/routing/nav.dart` is the single source for deep links (`/movie/:id`), web URLs, and
+  typed-stack restoration. Deep-linked keys carry only IDs; optional in-memory fields (initial
+  movie, hero tags) are extras that deep links simply omit.
+- **NAV-3 — Hero-crossing destinations live on the root stack.** Heroes do not fly across nested
+  navigators (<https://github.com/flutter/flutter/issues/112095>). The movie detail destination
+  stays on the root `NavStack` even after `BackStackTabsApp` tabs are added.
 - **NAV-4 — Predictive back on Android:** `android:enableOnBackInvokedCallback="true"` +
   `PredictiveBackPageTransitionsBuilder`, and `PopScope` (never `WillPopScope`)
   (<https://docs.flutter.dev/platform-integration/android/predictive-back>).

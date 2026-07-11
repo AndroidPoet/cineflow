@@ -11,29 +11,44 @@ import '../../../domain/models/movie_details.dart';
 import '../../core/widgets/movie_poster_card.dart';
 import '../../core/widgets/tmdb_image.dart';
 import '../../favorites/favorites_providers.dart';
-import '../details_args.dart';
 import '../details_providers.dart';
 
 class MovieDetailsScreen extends ConsumerWidget {
-  const MovieDetailsScreen({super.key, required this.movieId, this.args});
+  const MovieDetailsScreen({
+    super.key,
+    required this.movieId,
+    this.initialMovie,
+    this.posterHeroTag,
+    this.backdropHeroTag,
+  });
 
   final int movieId;
-  final DetailsArgs? args;
+  final Movie? initialMovie;
+  final String? posterHeroTag;
+  final String? backdropHeroTag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final details = ref.watch(movieDetailsProvider(movieId));
-    final initialMovie = args?.movie;
 
     final body = details.when(
-      data: (details) =>
-          _DetailsBody(movie: details.movie, details: details, args: args),
+      data: (details) => _DetailsBody(
+        movie: details.movie,
+        details: details,
+        posterHeroTag: posterHeroTag,
+        backdropHeroTag: backdropHeroTag,
+      ),
       error: (error, stackTrace) => _DetailsError(
         onRetry: () => ref.invalidate(movieDetailsProvider(movieId)),
       ),
       loading: () => initialMovie == null
           ? const Center(child: CircularProgressIndicator())
-          : _DetailsBody(movie: initialMovie, details: null, args: args),
+          : _DetailsBody(
+              movie: initialMovie!,
+              details: null,
+              posterHeroTag: posterHeroTag,
+              backdropHeroTag: backdropHeroTag,
+            ),
     );
 
     final movie = details.value?.movie ?? initialMovie;
@@ -51,11 +66,17 @@ class MovieDetailsScreen extends ConsumerWidget {
 }
 
 class _DetailsBody extends ConsumerWidget {
-  const _DetailsBody({required this.movie, required this.details, this.args});
+  const _DetailsBody({
+    required this.movie,
+    required this.details,
+    this.posterHeroTag,
+    this.backdropHeroTag,
+  });
 
   final Movie movie;
   final MovieDetails? details;
-  final DetailsArgs? args;
+  final String? posterHeroTag;
+  final String? backdropHeroTag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -83,7 +104,7 @@ class _DetailsBody extends ConsumerWidget {
               fit: StackFit.expand,
               children: [
                 Hero(
-                  tag: args?.backdropHeroTag ?? 'backdrop-detail-${movie.id}',
+                  tag: backdropHeroTag ?? 'backdrop-detail-${movie.id}',
                   child: TmdbImage(
                     url: TmdbConfig.backdropUrl(movie.backdropPath),
                   ),
@@ -110,7 +131,11 @@ class _DetailsBody extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _HeaderRow(movie: movie, details: details, args: args),
+                _HeaderRow(
+                  movie: movie,
+                  details: details,
+                  posterHeroTag: posterHeroTag,
+                ),
                 const SizedBox(height: 20),
                 if (details == null)
                   const _SkeletonRest()
@@ -127,11 +152,15 @@ class _DetailsBody extends ConsumerWidget {
 }
 
 class _HeaderRow extends StatelessWidget {
-  const _HeaderRow({required this.movie, required this.details, this.args});
+  const _HeaderRow({
+    required this.movie,
+    required this.details,
+    this.posterHeroTag,
+  });
 
   final Movie movie;
   final MovieDetails? details;
-  final DetailsArgs? args;
+  final String? posterHeroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +173,7 @@ class _HeaderRow extends StatelessWidget {
           child: AspectRatio(
             aspectRatio: 2 / 3,
             child: Hero(
-              tag: args?.posterHeroTag ?? 'poster-detail-${movie.id}',
+              tag: posterHeroTag ?? 'poster-detail-${movie.id}',
               child: TmdbImage(
                 url: TmdbConfig.posterUrl(movie.posterPath),
                 borderRadius: BorderRadius.circular(16),
