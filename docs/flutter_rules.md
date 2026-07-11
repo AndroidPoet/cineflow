@@ -199,9 +199,10 @@ From <https://docs.flutter.dev/ui/animations/hero-animations>:
   `useMaterial3: false`.**
 - **UI-2 — Both themes from one seed:** `ColorScheme.fromSeed(...)` for light and dark; the app is
   dark-first (movie-viewing context). No red/crimson accents.
-- **UI-3 — All network images through `cached_network_image`**
-  (<https://pub.dev/packages/cached_network_image>) with a placeholder and an `errorWidget` —
-  never a bare `Image.network` for TMDB content.
+- **UI-3 — All network images through `cached_network_image_ce`**
+  (<https://pub.dev/packages/cached_network_image_ce>) with a placeholder and an `errorBuilder` —
+  never a bare `Image.network` for TMDB content. (The original `cached_network_image` has been
+  unmaintained since Aug 2024; the CE fork is the actively maintained drop-in.)
 - **UI-4 — Every loading state is designed.** Skeletons (`skeletonizer`) for lists/details, never
   a bare centered spinner on content screens.
 

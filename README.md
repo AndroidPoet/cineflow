@@ -26,7 +26,7 @@ themselves from each movie's poster colors.
 |---|---|
 | State management | Riverpod 3 (`flutter_riverpod`, no codegen) |
 | Navigation | `go_router` |
-| Images | `cached_network_image` |
+| Images | `cached_network_image_ce` |
 | Loading UI | `skeletonizer` |
 | Motion | `Hero` + `flutter_animate` |
 | Data | TMDB API v3, Bearer-token auth |

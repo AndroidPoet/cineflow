@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class TmdbImage extends StatelessWidget {
@@ -26,7 +26,7 @@ class TmdbImage extends StatelessWidget {
             fit: fit,
             placeholder: (context, url) =>
                 ColoredBox(color: scheme.surfaceContainerHighest),
-            errorWidget: (context, url, error) => ColoredBox(
+            errorBuilder: (context, error, stackTrace) => ColoredBox(
               color: scheme.surfaceContainerHighest,
               child: Icon(Icons.broken_image_outlined, color: scheme.outline),
             ),
