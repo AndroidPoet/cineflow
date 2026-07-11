@@ -82,4 +82,11 @@ final navLinks = NavLinks<AppKey>()
     decode: (m) => const AboutKey(),
     parents: (key) => const [HomeKey()],
   )
-  ..notFound((uri) => const [HomeKey()]);
+  ..notFound((uri) {
+    // `cineflow://movie/550` parses "movie" as the URI host, not the path.
+    final id = uri.host == 'movie'
+        ? int.tryParse(uri.pathSegments.firstOrNull ?? '')
+        : null;
+    if (id != null) return [const HomeKey(), MovieDetailsKey(id)];
+    return const [HomeKey()];
+  });

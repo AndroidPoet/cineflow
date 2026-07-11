@@ -29,28 +29,31 @@ class HomeScreen extends ConsumerWidget {
                   left: 16,
                   right: 8,
                   top: MediaQuery.paddingOf(context).top + 8,
-                  child: Row(
-                    children: [
-                      Text(
-                        'CineFlow',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w800,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Text(
+                          'CineFlow',
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w800),
                         ),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () => navStack.push(const SearchKey()),
-                        icon: const Icon(Icons.search),
-                      ),
-                      IconButton(
-                        onPressed: () => navStack.push(const FavoritesKey()),
-                        icon: const Icon(Icons.favorite_outline),
-                      ),
-                      IconButton(
-                        onPressed: () => navStack.push(const AboutKey()),
-                        icon: const Icon(Icons.info_outline),
-                      ),
-                    ],
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () => navStack.push(const SearchKey()),
+                          icon: const Icon(Icons.search),
+                        ),
+                        IconButton(
+                          onPressed: () => navStack.push(const FavoritesKey()),
+                          icon: const Icon(Icons.favorite_outline),
+                        ),
+                        IconButton(
+                          onPressed: () => navStack.push(const AboutKey()),
+                          icon: const Icon(Icons.info_outline),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

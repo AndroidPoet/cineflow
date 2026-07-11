@@ -177,6 +177,15 @@ All from <https://docs.flutter.dev/perf/best-practices>:
 - **NAV-4 — Predictive back on Android:** `android:enableOnBackInvokedCallback="true"` +
   `PredictiveBackPageTransitionsBuilder`, and `PopScope` (never `WillPopScope`)
   (<https://docs.flutter.dev/platform-integration/android/predictive-back>).
+- **NAV-5 — Deep links are registered with the OS, not just the links table.** The `cineflow://`
+  scheme lives in `AndroidManifest.xml` (VIEW intent-filter + `flutter_deeplinking_enabled`) and
+  `Info.plist` (`CFBundleURLTypes` + `FlutterDeepLinkingEnabled`)
+  (<https://docs.flutter.dev/ui/navigation/deep-linking>). Custom-scheme URLs parse the first
+  segment as the *host* (`cineflow://movie/550` → host `movie`, path `/550`), so `notFound`
+  normalizes that form back onto `/movie/:id`.
+- **NAV-6 — iOS swipe-back must survive custom transitions.** `TransitionPage` (back_stack ≥
+  0.6.0) keeps the edge-swipe back gesture with any `transitionsBuilder`; opt out per page with
+  `swipeBack: false`. Never ship an iOS screen that can only go back via a button.
 
 ## 7. Hero animations & motion (ANIM)
 

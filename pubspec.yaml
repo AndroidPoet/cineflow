@@ -7,7 +7,7 @@ environment:
   sdk: ^3.10.4
 
 dependencies:
-  back_stack: ^0.5.0
+  back_stack: ^0.6.0
   cached_network_image_ce: ^4.9.0
   flutter:
     sdk: flutter
