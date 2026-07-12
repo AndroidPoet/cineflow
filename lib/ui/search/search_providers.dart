@@ -59,12 +59,12 @@ class SearchNotifier extends AsyncNotifier<SearchState> {
   Future<void> _search(String query) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final movies = await ref.read(movieRepositoryProvider).search(query);
+      final result = await ref.read(movieRepositoryProvider).search(query);
       return SearchState(
         query: query,
-        movies: movies,
-        page: 1,
-        hasMore: movies.length >= 20,
+        movies: result.movies,
+        page: result.page,
+        hasMore: result.hasMore,
       );
     });
   }
@@ -80,9 +80,9 @@ class SearchNotifier extends AsyncNotifier<SearchState> {
         state = AsyncData(
           SearchState(
             query: value.query,
-            movies: [...value.movies, ...next],
-            page: value.page + 1,
-            hasMore: next.length >= 20,
+            movies: [...value.movies, ...next.movies],
+            page: next.page,
+            hasMore: next.hasMore,
           ),
         );
       } on Exception {

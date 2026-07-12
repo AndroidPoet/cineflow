@@ -11,6 +11,8 @@ class _FakeTmdbApiService extends TmdbApiService {
   Future<Map<String, dynamic>> searchMovies(String query, {int page = 1}) {
     searchCalls++;
     return Future.value({
+      'page': page,
+      'total_pages': 5,
       'results': [
         for (var i = 0; i < 20; i++)
           {'id': page * 100 + i, 'title': '$query $i'},

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../config/tmdb_config.dart';
+import '../../../data/services/tmdb_api_service.dart';
 import '../../../domain/models/movie.dart';
 import '../../../routing/nav.dart';
 import '../../core/widgets/tmdb_image.dart';
@@ -72,7 +73,12 @@ class _FeaturedCarouselState extends ConsumerState<FeaturedCarousel> {
             ],
           );
         },
-        error: (error, stackTrace) => const SizedBox.shrink(),
+        error: (error, stackTrace) => _CarouselError(
+          message: error is TmdbException
+              ? error.userMessage
+              : 'Could not load featured movies',
+          onRetry: () => ref.invalidate(trendingMoviesProvider),
+        ),
         loading: () => const Skeletonizer(
           child: Padding(
             padding: EdgeInsets.all(16),
@@ -83,6 +89,35 @@ class _FeaturedCarouselState extends ConsumerState<FeaturedCarousel> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CarouselError extends StatelessWidget {
+  const _CarouselError({required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.cloud_off_outlined,
+            color: Theme.of(context).colorScheme.outline,
+          ),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Text(message, textAlign: TextAlign.center),
+          ),
+          const SizedBox(height: 12),
+          FilledButton.tonal(onPressed: onRetry, child: const Text('Retry')),
+        ],
       ),
     );
   }

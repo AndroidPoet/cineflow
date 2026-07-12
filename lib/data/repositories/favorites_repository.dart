@@ -1,31 +1,64 @@
-import 'dart:convert';
-
+import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/models/movie.dart';
+import '../db/app_database.dart';
+
+final appDatabaseProvider = Provider<AppDatabase>((ref) {
+  final db = AppDatabase();
+  ref.onDispose(db.close);
+  return db;
+});
 
 final favoritesRepositoryProvider = Provider<FavoritesRepository>(
-  (ref) => FavoritesRepository(),
+  (ref) => FavoritesRepository(ref.watch(appDatabaseProvider)),
 );
 
 class FavoritesRepository {
-  FavoritesRepository({SharedPreferencesAsync? prefs})
-    : _prefs = prefs ?? SharedPreferencesAsync();
+  FavoritesRepository(this._db);
 
-  static const _key = 'favorite_movies';
+  final AppDatabase _db;
 
-  final SharedPreferencesAsync _prefs;
-
-  Future<List<Movie>> load() async {
-    final raw = await _prefs.getString(_key);
-    if (raw == null) return const [];
-    return (jsonDecode(raw) as List<dynamic>)
-        .cast<Map<String, dynamic>>()
-        .map(Movie.fromJson)
-        .toList();
+  Stream<List<Movie>> watchAll() {
+    final query = _db.select(_db.favorites)
+      ..orderBy([(t) => OrderingTerm.desc(t.addedAt)]);
+    return query.watch().map((rows) => rows.map(_toMovie).toList());
   }
 
-  Future<void> save(List<Movie> movies) =>
-      _prefs.setString(_key, jsonEncode([for (final m in movies) m.toJson()]));
+  Future<bool> isFavorite(int id) async {
+    final row = await (_db.select(
+      _db.favorites,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    return row != null;
+  }
+
+  Future<void> toggle(Movie movie) async {
+    if (await isFavorite(movie.id)) {
+      await (_db.delete(
+        _db.favorites,
+      )..where((t) => t.id.equals(movie.id))).go();
+    } else {
+      await _db.into(_db.favorites).insert(_toRow(movie));
+    }
+  }
+
+  FavoritesCompanion _toRow(Movie m) => FavoritesCompanion.insert(
+    id: Value(m.id),
+    title: m.title,
+    overview: m.overview,
+    voteAverage: m.voteAverage,
+    posterPath: Value(m.posterPath),
+    backdropPath: Value(m.backdropPath),
+    releaseDate: Value(m.releaseDate),
+  );
+
+  Movie _toMovie(FavoriteRow r) => Movie(
+    id: r.id,
+    title: r.title,
+    overview: r.overview,
+    voteAverage: r.voteAverage,
+    posterPath: r.posterPath,
+    backdropPath: r.backdropPath,
+    releaseDate: r.releaseDate,
+  );
 }

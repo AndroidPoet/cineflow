@@ -29,8 +29,8 @@ class MovieRepository {
   Future<List<Movie>> topRated({int page = 1}) async =>
       _movieList(await _api.topRatedMovies(page: page));
 
-  Future<List<Movie>> search(String query, {int page = 1}) async =>
-      _movieList(await _api.searchMovies(query, page: page));
+  Future<MoviePage> search(String query, {int page = 1}) async =>
+      _moviePage(await _api.searchMovies(query, page: page));
 
   Future<MovieDetails> details(int movieId) async =>
       MovieDetails.fromJson(await _api.movieDetails(movieId));
@@ -40,4 +40,24 @@ class MovieRepository {
           .cast<Map<String, dynamic>>()
           .map(Movie.fromJson)
           .toList();
+
+  MoviePage _moviePage(Map<String, dynamic> json) => MoviePage(
+    movies: _movieList(json),
+    page: (json['page'] as int?) ?? 1,
+    totalPages: (json['total_pages'] as int?) ?? 1,
+  );
+}
+
+class MoviePage {
+  const MoviePage({
+    required this.movies,
+    required this.page,
+    required this.totalPages,
+  });
+
+  final List<Movie> movies;
+  final int page;
+  final int totalPages;
+
+  bool get hasMore => page < totalPages;
 }
