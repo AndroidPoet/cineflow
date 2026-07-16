@@ -29,7 +29,9 @@ class _FeaturedCarouselState extends ConsumerState<FeaturedCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    final trending = ref.watch(trendingMoviesProvider);
+    final trending = ref.watch(
+      moviesByCategoryProvider(MovieCategory.trending),
+    );
     return SizedBox(
       height: 440,
       child: trending.when(
@@ -77,7 +79,8 @@ class _FeaturedCarouselState extends ConsumerState<FeaturedCarousel> {
           message: error is TmdbException
               ? error.userMessage
               : 'Could not load featured movies',
-          onRetry: () => ref.invalidate(trendingMoviesProvider),
+          onRetry: () =>
+              ref.invalidate(moviesByCategoryProvider(MovieCategory.trending)),
         ),
         loading: () => const Skeletonizer(
           child: Padding(

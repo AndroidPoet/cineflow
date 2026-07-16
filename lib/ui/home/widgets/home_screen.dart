@@ -13,12 +13,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(trendingMoviesProvider);
-          ref.invalidate(nowPlayingMoviesProvider);
-          ref.invalidate(popularMoviesProvider);
-          ref.invalidate(topRatedMoviesProvider);
-        },
+        onRefresh: () async => ref.invalidate(moviesByCategoryProvider),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -58,21 +53,9 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            MovieRail(
-              title: 'Now playing',
-              provider: nowPlayingMoviesProvider,
-              heroPrefix: 'now',
-            ),
-            MovieRail(
-              title: 'Popular',
-              provider: popularMoviesProvider,
-              heroPrefix: 'popular',
-            ),
-            MovieRail(
-              title: 'Top rated',
-              provider: topRatedMoviesProvider,
-              heroPrefix: 'top',
-            ),
+            const MovieRail(category: MovieCategory.nowPlaying),
+            const MovieRail(category: MovieCategory.popular),
+            const MovieRail(category: MovieCategory.topRated),
             const SizedBox(height: 32),
           ],
         ),

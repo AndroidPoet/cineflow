@@ -81,8 +81,7 @@ class _DetailsBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final favorites = ref.watch(favoritesProvider).value ?? const <Movie>[];
-    final isFavorite = favorites.any((m) => m.id == movie.id);
+    final isFavorite = ref.watch(isFavoriteProvider(movie.id));
 
     return CustomScrollView(
       slivers: [

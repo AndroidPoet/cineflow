@@ -22,10 +22,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          trendingMoviesProvider.overrideWith((ref) => _movies),
-          nowPlayingMoviesProvider.overrideWith((ref) => _movies),
-          popularMoviesProvider.overrideWith((ref) => _movies),
-          topRatedMoviesProvider.overrideWith((ref) => _movies),
+          moviesByCategoryProvider.overrideWith((ref, category) => _movies),
         ],
         child: const MaterialApp(home: HomeScreen()),
       ),
@@ -45,12 +42,12 @@ void main() {
       ProviderScope(
         retry: (retryCount, error) => null,
         overrides: [
-          trendingMoviesProvider.overrideWith((ref) => _movies),
-          nowPlayingMoviesProvider.overrideWith(
-            (ref) => throw Exception('network down'),
-          ),
-          popularMoviesProvider.overrideWith((ref) => _movies),
-          topRatedMoviesProvider.overrideWith((ref) => _movies),
+          moviesByCategoryProvider.overrideWith((ref, category) {
+            if (category == MovieCategory.nowPlaying) {
+              throw Exception('network down');
+            }
+            return _movies;
+          }),
         ],
         child: const MaterialApp(home: HomeScreen()),
       ),

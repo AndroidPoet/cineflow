@@ -5,43 +5,41 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../domain/models/movie.dart';
 import '../../core/widgets/movie_poster_card.dart';
+import '../home_providers.dart';
 
 class MovieRail extends ConsumerWidget {
-  const MovieRail({
-    super.key,
-    required this.title,
-    required this.provider,
-    required this.heroPrefix,
-  });
+  const MovieRail({super.key, required this.category});
 
-  final String title;
-  final FutureProvider<List<Movie>> provider;
-  final String heroPrefix;
+  final MovieCategory category;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final movies = ref.watch(provider);
+    final movies = ref.watch(moviesByCategoryProvider(category));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
-          child: Text(title, style: Theme.of(context).textTheme.titleLarge),
+          child: Text(
+            category.label,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
         ),
         SizedBox(
           height: 260,
           child: movies.when(
             data: (movies) => _RailList(
               movies: movies,
-              heroPrefix: heroPrefix,
+              heroPrefix: category.name,
               animate: true,
             ),
-            error: (error, stackTrace) =>
-                _RailError(onRetry: () => ref.invalidate(provider)),
+            error: (error, stackTrace) => _RailError(
+              onRetry: () => ref.invalidate(moviesByCategoryProvider(category)),
+            ),
             loading: () => Skeletonizer(
               child: _RailList(
                 movies: List.filled(5, _placeholderMovie),
-                heroPrefix: '$heroPrefix-skeleton',
+                heroPrefix: '${category.name}-skeleton',
                 animate: false,
               ),
             ),

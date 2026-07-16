@@ -16,3 +16,9 @@ class FavoritesNotifier extends StreamNotifier<List<Movie>> {
   Future<void> toggle(Movie movie) =>
       ref.read(favoritesRepositoryProvider).toggle(movie);
 }
+
+final isFavoriteProvider = Provider.autoDispose.family<bool, int>(
+  (ref, movieId) =>
+      ref.watch(favoritesProvider).value?.any((Movie m) => m.id == movieId) ??
+      false,
+);
